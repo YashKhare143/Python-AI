@@ -1,3 +1,18 @@
+'''
+                             Welcome to Python-AI-1.0
+
+Kindly install all the Requirements from requirements.txt by using command - pip install -r requirements.txt
+You can do lots of things with it like sending emails, whatsapp messages,downloading youtube videos,play songs and much more
+more functions will be add in it...
+
+If you have some improvements for it you can send us commit request in git hub:)
+Enjoy you:)
+
+Here are some commands 
+1: to use ai with your voice - just type "Voice" after running it.
+2: to use ai with keyboard(Only use this command if you activing voise mode)  - just say this "i want to type a command for you"
+
+'''
 import pyttsx3
 import datetime
 import speech_recognition as sr
@@ -82,7 +97,7 @@ def sendEmail(to,content):
     server = smtplib.SMTP('smtp.gmail.com',587)
     server.ehlo()
     server.starttls()
-    server.login('kharey211@gmail.com','')          #Type your gmail id and password here to send email
+    server.login('','')          #Type your gmail id and password here to send email
     server.sendmail('kharey211@gmail.com',to,content)
     server.close()
 
