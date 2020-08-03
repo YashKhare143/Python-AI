@@ -5,10 +5,10 @@ Kindly install all the Requirements from requirements.txt by using command - pip
 You can do lots of things with it like sending emails, whatsapp messages,downloading youtube videos,play songs and much more
 more functions will be add in it...
 
-If you have some improvements for it you can send us commit request in git hub:)
-Enjoy you:)
 
-Here are some commands 
+Enjoy :)
+
+Here are commands to controle it by voice or by keyboard 
 1: to use ai with your voice - just type "Voice" after running it.
 2: to use ai with keyboard(Only use this command if you activing voise mode)  - just say this "i want to type a command for you"
 
