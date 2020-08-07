@@ -8,7 +8,7 @@ more functions will be add in it...
 
 Enjoy :)
 
-Here are commands to controle it by voice or by keyboard 
+Here are commands to controle it by voice or by keyboard
 1: to use ai with your voice - just type "Voice" after running it.
 2: to use ai with keyboard(Only use this command if you activing voise mode)  - just say this "i want to type a command for you"
 
@@ -28,6 +28,8 @@ import pywhatkit
 from configparser import ConfigParser
 import re 
 from selenium import webdriver
+import keyboardCommands
+import voiceCommands
 
 regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 # browser = webdriver.Chrome('C:\\Users\\khare\\Downloads\\chromedriver_win32\\chromedriver.exe')
@@ -82,7 +84,7 @@ def takeCommand():
             return "None"
             
         return query
-    else:
+    elif chat == False:
 
         r = sr.Recognizer()
         with sr.Microphone() as source:
@@ -114,28 +116,13 @@ def setupSMTPServer(mailAddress,message):
     server.login(config['Email']['yourMailId'],config['Email']['yourMailPass'])          #Type your gmail id and password here to send email
     server.sendmail(config['Email']['yourMailId'],mailAddress,message)
     server.close()
-
-# query = query.replace("wikipedia","")
         
 def sendEmail(name,mailAddress):
     if chat == True:
-        try:
-            speak("please type a message: ")
-            message = input("=> ")
-            setupSMTPServer(mailAddress,message)
-            speak(f"Your message has been send to {name} with email address {mailAddress}.")
-        except Exception as e:
-            print(e)
-            speak("Sorry I am not abel to send email this time...")
+        keyboardCommands.sendEmail(name,mailAddress)
     elif chat == False:
-        try:
-            speak("Ok,what's the message")
-            message = takeCommand()
-            setupSMTPServer(mailAddress,message)
-            speak(f"Your message has been send to {name} with email address {mailAddress}.")
-        except Exception as e:
-            print(e)
-            speak("Sorry I am not abel to send email this time...")
+        voiceCommands.sendEmail(name,mailAddress)
+
 
 def addToMailList(name,mailAddress):
     config.set('EmailAddress',name,mailAddress)
@@ -144,116 +131,45 @@ def addToMailList(name,mailAddress):
 
 def askToAddMailToList(name,mailAddress):
     if chat == True:
-        speak(f"Do you want me to add {name} Email address to your Email address list?")
-        addToList = input("please type yes or no:")
-        if addToList == "yes":
-            speak("Ok")
-            addToMailList(name,mailAddress)
-        elif addToList == "no":
-            speak("Ok sir as your wish.")
+        keyboardCommands.askToAddMailToList(name,mailAddress)
             
     elif chat == False:
-        speak(f"Do you want me to add {name} Email address to your Email address list?")
-        addToList = takeCommand()
-        if addToList == "yes":
-            speak("Ok")
-            addToMailList(name,mailAddress)
-        elif addToList == "no":
-            speak("Ok sir as your wish.")
+        voiceCommands.askToAddMailToList(name,mailAddress)
 
 def mailValidition(name,mailAddress):
     if(re.search(regex,mailAddress)):
         if chat == True:
-            speak("Is it right mail?")
-            mailVerification = input("Pleas type yes or no: ")
-            
-            if mailVerification == "yes":
-                askToAddMailToList(name,mailAddress)
-                sendEmail(name,mailAddress)
-
-            elif mailVerification == "no":
-                emailVerification(name,mailAddress)
+            keyboardCommands.mailValidition(name,mailAddress)
 
         elif chat == False:
-            speak("Is it right mail?")
-            mailVerification = takeCommand()
-            
-            if mailVerification == "yes":
-                askToAddMailToList(name,mailAddress)
-                sendEmail(name,mailAddress)
-
-            elif mailVerification == "no":
-                emailVerification(name,mailAddress)
+            voiceCommands.mailValidition(name,mailAddress)
 
     else:
         speak("Invalid Email, Please enter the valide Email Address")
-        reEnterTheEmaill(name,mailAddress)
+        enterValidEmaill(name,mailAddress)
 
-def reEnterTheEmaill(name,mailAddress):
-    if chat == True:
-        mailAddress = input ("=> ")
-        mailValidition(name,mailAddress)
-    elif chat == False:
-        mailAddress = takeCommand()
-        mailAddress = mailAddress.replace(" ","")
-        mailValidition(name,mailAddress)
-    
+
 def emailVerification(name,mailAddress):
     if chat == True:
-        speak(f"Please type the mail address of {name} again:")
-        mailAddress = input("=> ")
-        mailValidition(name,mailAddress)
+        keyboardCommands.emailVerification(name,mailAddress)
 
     elif chat == False:
-        speak(f"Please say the mail address of {name} again:")
-        mailAddress = takeCommand()
-        mailAddress = mailAddress.replace(" ","")
-        mailValidition(name,mailAddress)
+         voiceCommands.emailVerification(name,mailAddress)
+    
+def enterValidEmaill(name,mailAddress):
+    if chat == True:
+        keyboardCommands.enterValidEmaill(name,mailAddress)
+
+    elif chat == False:
+        voiceCommands.enterValidEmaill(name,mailAddress)
+
     
 def Email():
     if chat == True:
-        try:
-            try:
-
-                speak("To whome you want me to send message?")
-                name = input("Please enter recipient name: ")
-                if config["EmailAddress"][name]:
-                    speak("this name is in your email address list")
-                    mailAddress = config["EmailAddress"][name]
-                    speak(f"the email address of {name} is {mailAddress}")
-                    sendEmail(name,mailAddress)
-            except Exception as e:
-                speak("this name is not in your email address list")
-                speak(f"What is the mail address of {name}: ")
-                mailAddress = input ("=> ")
-                mailValidition(name,mailAddress)
-                
-           
-        except Exception as e:
-            print(e)
-            speak("Sorry I am not abel to send email this time...")
+        keyboardCommands.Email()
           
     elif chat == False:
-        try:
-            try:
-
-                speak("To whome you want me to send message?")
-                name = takeCommand()
-                if config["EmailAddress"][name]:
-                    speak("this name is in your email address list")
-                    mailAddress = config["EmailAddress"][name]
-                    speak(f"the email address of {name} is {mailAddress}")
-                    sendEmail(name,mailAddress)
-            except Exception as e:
-                speak("this name is not in your email address list")
-                speak(f"What is the mail address of {name}: ")
-                mailAddress = takeCommand()
-                mailAddress = mailAddress.replace(" ","")
-                mailValidition(name,mailAddress)
-                
-        except Exception as e:
-            print(e)
-            speak("Sorry I am not abel to send email this time...")
+        voiceCommands.Email()
 
         
 
@@ -292,6 +208,10 @@ def wpMsgSender():
         speak(f"message has been send to {name}")
 ############################ To Send WhatsApp Message end's here ############################ 
 
+def enterCorrestOperation():
+    main.speak("Please enter yes or no.")
+
+
 #YouTube video downloader
 def YTVdownloader():
     while True:
@@ -299,20 +219,21 @@ def YTVdownloader():
         link = input("waiting for your link:)")
         YouTube(link).streams.first().download()
         speak("Your video has been downloaded")
-        speak("Is there any other video you want me to download?")
-        userInput = input("Please type yes or no: ").lower()
-        if userInput ==  "yes":
-            YTVdownloader()
-
-            break
-        elif userInput ==  "no":
-            speak("OK")
-            
-            break
+        while True:
+            speak("Is there any other video you want me to download?")
+            userInput = input("Please type yes or no: ").lower()
+            if userInput ==  "yes":
+                YTVdownloader()
+                break
+            elif userInput ==  "no":
+                speak("OK")
+                break
+            else:
+                enterCorrestOperation()
 
 #Play music
 def playMusic():
-    speak("Ok, sir i will play random songs from your favriot songs play list...")
+    speak("Ok, sir i will play random songs from your favourite songs play list...")
     music_dir = 'F:\\songs\\Fav'  #Enter your song directory here
     songs = os.listdir(music_dir)  
     print(int(len(songs))-10)
@@ -418,7 +339,10 @@ if __name__ == "__main__":
            
         elif 'i want to type a command for you' in query:
             chat = True
-           
+
+        elif 'hello' in query:
+            speak("Hi..")
+
         
     # pass
   
